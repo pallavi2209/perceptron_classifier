@@ -1,11 +1,11 @@
 import sys
+sys.path.append('..')
 import argparse
-import perceplearn
-
-#def wordSpell(line):
-  
-
-
+try:
+  import perceplearn
+except:
+  print("Cannot find perceplearn module. Please check directory structure.\n Exiting... ")
+  sys.exit()
 
 
 def createposFile(inFileName,outFileName):
@@ -21,19 +21,23 @@ def createposFile(inFileName,outFileName):
       curr=tokens[i].split("/")
       currW=curr[0]
       tagCurrent=curr[1]
-      pprevW=tokens[i-2].split("/")[0]
+#      pprevW=tokens[i-2].split("/")[0]
       prevW=tokens[i-1].split("/")[0]
       nextW=tokens[i+1].split("/")[0]
-      nnextW=tokens[i+2].split("/")[0]
+#      nnextW=tokens[i+2].split("/")[0]
       line=line+tagCurrent
-      pprevF="pprev:"+pprevW
+   #   pprevF="pprev:"+pprevW
+      if prevW!="BOS":
+        prevW=prevW.lower()
+      if nextW!="EOS":
+        nextW=nextW.lower()
       prevF="prev:"+prevW
-      currF="curr:"+currW
+      currF="curr:"+currW.lower()
       nextF="next:"+nextW
-      nnextF="nnext:"+nnextW
+#      nnextF="nnext:"+nnextW
       prefixF="pref:"+currW[:2]
       suffixF="suff:"+currW[-3:]
-      line=line+" "+ prevF.lower()+ " "+ currF.lower() +" "+ nextF.lower() + " "+ prefixF + " " + suffixF +"\n"
+      line=line+" "+ prevF + " "+ currF +" "+ nextF  + " "+ prefixF + " " + suffixF +"\n"
       outfile.write(line)
   infile.close()
   outfile.close()
@@ -49,8 +53,8 @@ def postrainMain(argv):
   devfname=args.devFile
 
 
-  ptrfname = trfname+".mypercept.train"
-  pdevfname = devfname+".mypercept.dev"
+  ptrfname = trfname+".pre.percepTrain"
+  pdevfname = devfname+"pre.percepDev"
   createposFile(trfname,ptrfname)
   createposFile(devfname,pdevfname)
   pargs=[ptrfname,mdfname,"-h",pdevfname]

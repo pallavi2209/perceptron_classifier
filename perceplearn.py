@@ -3,6 +3,7 @@ import argparse
 from decimal import Decimal
 import copy
 import random
+import pickle
 def perceptMain(argv):
   parser = argparse.ArgumentParser(add_help=False)
   parser.add_argument("trainFile")
@@ -19,13 +20,7 @@ def perceptMain(argv):
   lineList=[]
   for line in trfile:
     lineList.append(line)
-  random.shuffle(lineList)
-  shTrFile=open("mypercept.shuffled.train",'w+')
-  for lineItem in lineList:
-    shTrFile.write(lineItem)
-  #unique words dictuw={word->0}
-  shTrFile.seek(0,0)
-  for line in shTrFile:
+  for line in lineList:
     tokens=line.split()
     strClass=tokens[0]
     setcls.add(strClass)
@@ -34,20 +29,24 @@ def perceptMain(argv):
       if token not in dictuw:
         dictuw[token]=0
   dictClsWts={}
+  dictClsBias={}
+  dictClsAvg={}
   for item in setcls:
     dictClsWts[item]=copy.deepcopy(dictuw)
- 
-  for N in range(0,3):
-    trfile.seek(0,0)
-    for line in trfile:
-      maxwtsum = Decimal('-inf')
-      maxwtcls = next(iter(setcls))
-      wtsum=0
+    dictClsBias[item]=copy.deepcopy(dictuw)
+    dictClsAvg[item]=copy.deepcopy(dictuw)
+  maxAcc=0
+  maxModel=dictClsAvg
+  for N in range(0,20):
+    totDocs=0
+    random.shuffle(lineList)
+    for line in lineList:
+      totDocs+=1
       tokens=line.split()
       trueCls=tokens[0]
       # compute class, wt tuple
       maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsWts[cls][token] for token in tokens[1:] ]) )
-
+      
       if trueCls != maxwtcls :
       #  print("wrong prediction for line: %s \n True class: %s, Predicted class: %s"% (line, trueCls, maxwtcls))
         dictLine={}
@@ -56,14 +55,18 @@ def perceptMain(argv):
             dictLine[token]=1 + (dictLine[token])
           else:
             dictLine[token]=1
-
+        docLength = sum( dictLine.values())
         #update the weights for truecls and maxwtcls
-        dicttcls=dictClsWts[trueCls]
-        dictfcls=dictClsWts[maxwtcls]
         for k,v in dictLine.items():
-          dictClsWts[trueCls][k]= dictClsWts[trueCls][k]-v
-          dictClsWts[maxwtcls][k]=dictClsWts[maxwtcls][k]+v
-    print(dictClsWts)
+          dictClsWts[trueCls][k] = dictClsWts[trueCls][k] + v
+          dictClsWts[maxwtcls][k]=dictClsWts[maxwtcls][k] - v
+          dictClsBias[trueCls][k]+=N*v
+          dictClsBias[maxwtcls][k]-=N*v
+    #print(dictClsWts)
+    for c,d in dictClsWts.items():
+      for t,val in d.items():
+        avgVal=val-(dictClsBias[c][t]/totDocs)
+        dictClsAvg[c][t]=avgVal
     devFile=open(devfname,'r')
     correctPred=0
     totFiles=0
@@ -73,13 +76,21 @@ def perceptMain(argv):
       tokens=line.split()
       truecls=tokens[0]
       # compute class, wt tuple
-      maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsWts[cls][token] for token in tokens[1:] if token in dictuw]) )
+      maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsAvg[cls][token] for token in tokens[1:] if token in dictClsAvg[cls]]))
  #     print("True class: %s, Predicted class: %s"%(truecls,maxwtcls))
       if truecls==maxwtcls:
         correctPred+=1
     accuracy=correctPred/totFiles
+    if accuracy>maxAcc:
+      maxAcc=accuracy
+      maxModel=dictClsAvg
     print("Iteration %d: Accuracy:%f"%(N,accuracy))
+  print(maxAcc)
+  dictModel=dict(wDict=maxModel,setcls=setcls)
+  with open(mdfname,"wb") as handle:
+    pickle.dump(dictModel,handle)
   trfile.close()
+  handle.close()
  
 if __name__=="__main__":
   perceptMain(sys.argv[1:])
