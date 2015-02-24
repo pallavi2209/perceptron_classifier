@@ -1,44 +1,39 @@
 import sys
-sys.path.append('..')
 import argparse
 import pickle
+import re
+import codecs
+def getWShape(word):
+    word = re.sub('[a-z]+','a',word)
+    word = re.sub('[A-Z]+','A',word)
+    word = re.sub('[0-9]+','9',word)
+    word = re.sub('[^0-9a-zA-Z]+','-',word)
+    return word
+
 def createposFile(inLine):
   listPre=[]
   tokens=inLine.split()
   prep=["BOS/BOS"]
   app=["EOS/EOS"]
-  tokens=prep+prep+tokens+app+app
+  tokens=prep+tokens+app
   
-  for i in range(2,len(tokens)-2):
+  prev=tokens[0].split("/")
+  curr=tokens[1].split("/")
+  for i in range(2,len(tokens)):
     line=""
-    curr=tokens[i].split("/")
     currW=curr[0]
-
-    pPrevW=tokens[i-2].split("/")[0]
-    prevW=tokens[i-1].split("/")[0]
-
-    nextW=tokens[i+1].split("/")[0]
-    nNextW=tokens[i+2].split("/")[0]
-
-#      line=line+tagCurrent
-
-    if prevW!="BOS":
-      prevW=prevW.lower()
-    if nextW!="EOS":
-      nextW=nextW.lower()
-    if pPrevW!="BOS":
-      pPrevW=pPrevW.lower()
-    if nNextW!="EOS":
-      nNextW=nNextW.lower()
-      
-    pPrevF="pprev:"+pPrevW
+    prevW=prev[0]
+    nxt=tokens[i].split("/")
+    nextW=nxt[0]
+    
     prevF="prev:"+prevW
-    currF="curr:"+currW.lower()
+    currF="curr:"+currW
     nextF="next:"+nextW
-    nNextF="nnext:"+nNextW
-    prefixF="pref:"+currW[:2]
-    suffixF="suff:"+currW[-3:]
-    line += pPrevF + " "+ prevF + " "+ currF +" "+ nextF + " " + nNextF + " "+ prefixF + " " + suffixF +"\n"
+    suffixFthree="suff3:"+currW[-3:]
+    suffixFtwo="suff2:"+currW[-2:]
+    wshape = "wshape:" + getWShape(currW)
+    
+    line += prevF + " "+ currF +" "+ nextF + " "  + suffixFthree + " " + suffixFtwo + " " +  wshape + "\n"
     listPre.append(line)
   return listPre
 
@@ -53,7 +48,7 @@ def postagMain(argv):
 
   dictClsWts=data["wDict"]
   setcls = data["setcls"]
-
+  sys.stdin = codecs.getreader('utf8')(sys.stdin.detach(), errors='ignore')
   for doc in sys.stdin:
     listToTag=createposFile(doc)
     result=""

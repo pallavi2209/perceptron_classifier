@@ -1,6 +1,7 @@
 import tempfile
 import re
 import sys
+import os
 sys.path.append('..')
 import argparse
 try:
@@ -8,6 +9,14 @@ try:
 except:
   print("Cannot find perceplearn module. Please check directory structure.\n Exiting... ")
   sys.exit()
+
+def getWShape(word):
+    word = re.sub('[a-z]+','a',word)
+    word = re.sub('[A-Z]+','A',word)
+    word = re.sub('[0-9]+','9',word)
+    word = re.sub('[^0-9a-zA-Z]+','-',word)
+    return word
+
 
 def processToken(token):
   indexes = [found.start() for found in re.finditer('/',token)]
@@ -32,7 +41,7 @@ def createNeFile(inFileName,outFileName):
     resPrev=processToken(tokens[0])
     resCurr=processToken(tokens[1])
     for i in range(2,len(tokens)):
-      line=""
+      resLine=""
 
       if resPrev==-1:
         continue;
@@ -54,18 +63,19 @@ def createNeFile(inFileName,outFileName):
         nextW=resNext[0]
         nextTag=resNext[1]
    
-      line=line+nertagCurr
+      resLine=resLine + nertagCurr
       prevWF="prevW:"+prevW
       prevTF="prevT:"+prevTag
       currWF="currW:"+currW
       currTF="currT:"+currTag
       nextWF="nextW:"+nextW
       nextTF="nextT:"+nextTag
-      prefixF="pref:"+currW[:2]
-      suffixF="suff:"+currW[-3:]
-      line=line+" "+ prevWF+ " " + prevTF + " "+ currWF+" "+ currTF + " "+ nextWF + " " + nextTF + " " + prefixF + " " + suffixF +"\n"
-  #    print(line)
-      outfile.write(line)
+      suffixFx="suff:"+currW[-4:]
+      suffixFy="suff:"+currW[-3:]
+      
+      wshape = "wshape:" + getWShape(currW)
+      resLine=resLine+" "+ prevWF+ " " + prevTF + " "+ currWF+" "+ currTF + " "+ nextWF + " " + nextTF + " " + suffixFx + " " +  suffixFy + " " + wshape + "\n"
+      outfile.write(resLine)
       resPrev=resCurr
       resCurr=resNext
   infile.close()
@@ -79,20 +89,26 @@ def netrainMain(argv):
   args = parser.parse_args(argv)
   trfname=args.trainFile
   mdfname=args.modelFile
-  devfname=args.devFile
+  if args.devFile:
+    devfname=args.devFile
 
-#  ptrfname = trfname+".pre.train"
-#  pdevfname = devfname+".pre.dev"
   ptrfile = tempfile.NamedTemporaryFile(delete=False)
   ptrfname=ptrfile.name
   ptrfile.close()
-  pdevFile = tempfile.NamedTemporaryFile(delete=False)
-  pdevfname=pdevFile.name
-  pdevFile.close()
   createNeFile(trfname,ptrfname)
-  createNeFile(devfname,pdevfname)
-  pargs=[ptrfname,mdfname,"-h",pdevfname]
+
+  if args.devFile:
+    pdevFile = tempfile.NamedTemporaryFile(delete=False)
+    pdevfname=pdevFile.name
+    pdevFile.close()
+    createNeFile(devfname,pdevfname)
+    pargs=[ptrfname,mdfname,"-h",pdevfname]
+  else:
+    pargs=[ptrfname,mdfname]
   perceplearn.perceptMain(pargs)
+  os.unlink(ptrfname)
+  if args.devFile:
+    os.unlink(pdevfname)
 
 if __name__=="__main__":
   netrainMain(sys.argv[1:])

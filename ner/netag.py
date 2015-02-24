@@ -1,14 +1,14 @@
 import sys
-sys.path.append('..')
 import argparse
 import pickle
 import re
-try:
-  import perceplearn
-except:
-  print("Cannot find perceplearn module. Please check directory structure.\n Exiting... ")
-  sys.exit()
-
+import codecs
+def getWShape(word):
+    word = re.sub('[a-z]+','a',word)
+    word = re.sub('[A-Z]+','A',word)
+    word = re.sub('[0-9]+','9',word)
+    word = re.sub('[^0-9a-zA-Z]+','-',word)
+    return word
 
 def processToken(token):
   indexes = [found.start() for found in re.finditer('/',token)]
@@ -18,7 +18,6 @@ def processToken(token):
   word=token[:iSecLast]
   pbTag=token[iSecLast+1:]
   posTag=pbTag.split("/")[0]
-#  neTag=pbTag.split("/")[1]
   return [word, posTag]
 
 def createneFile(inLine):
@@ -58,9 +57,11 @@ def createneFile(inLine):
     currTF="currT:"+currTag
     nextWF="nextW:"+nextW
     nextTF="nextT:"+nextTag
-    prefixF="pref:"+currW[:2]
-    suffixF="suff:"+currW[-3:]
-    line = prevWF+ " " + prevTF + " "+ currWF+" "+ currTF + " "+ nextWF + " " + nextTF + " " + prefixF + " " + suffixF +"\n"
+    suffixFx="suff:"+currW[-4:]
+    suffixFy="suff:"+currW[-3:]
+
+    wshape = "wshape:" + getWShape(currW)
+    line = prevWF+ " " + prevTF + " "+ currWF+" "+ currTF + " "+ nextWF + " " + nextTF + " "  + suffixFx + " " + suffixFy+ " " +  wshape +"\n"
     resPrev=resCurr
     resCurr=resNext  
     listPre.append(line)
@@ -77,7 +78,8 @@ def netagMain(argv):
 
   dictClsWts=data["wDict"]
   setcls = data["setcls"]
-
+  
+  sys.stdin = codecs.getreader('utf8')(sys.stdin.detach(), errors='ignore')
   for doc in sys.stdin:
     listToTag=createneFile(doc)
     result=""

@@ -12,7 +12,8 @@ def perceptMain(argv):
   args = parser.parse_args(argv)
   trfname=args.trainFile
   mdfname=args.modelFile
-  devfname=args.devFile
+  if args.devFile:
+    devfname=args.devFile
 
   setcls=set()
   dictuw={}
@@ -67,25 +68,32 @@ def perceptMain(argv):
       for t,val in d.items():
         avgVal=val-(dictClsBias[c][t]/totDocs)
         dictClsAvg[c][t]=avgVal
-    devFile=open(devfname,'r')
-    correctPred=0
-    totFiles=0
-    accuracy=0
-    for line in devFile:
-      totFiles+=1
-      tokens=line.split()
-      truecls=tokens[0]
-      # compute class, wt tuple
-      maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsAvg[cls][token] for token in tokens[1:] if token in dictClsAvg[cls]]))
- #     print("True class: %s, Predicted class: %s"%(truecls,maxwtcls))
-      if truecls==maxwtcls:
-        correctPred+=1
-    accuracy=correctPred/totFiles
-    if accuracy>maxAcc:
-      maxAcc=accuracy
+    if args.devFile:
+      devFile=open(devfname,'r')
+      correctPred=0
+      totFiles=0
+      accuracy=0
+      for line in devFile:
+        totFiles+=1
+        tokens=line.split()
+        truecls=tokens[0]
+        # compute class, wt tuple
+        maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsAvg[cls][token] for token in tokens[1:] if token in dictClsAvg[cls]]))
+   #     print("True class: %s, Predicted class: %s"%(truecls,maxwtcls))
+        if truecls==maxwtcls:
+          correctPred+=1
+      accuracy=correctPred/totFiles
+      if accuracy>maxAcc:
+        maxAcc=accuracy
+        maxModel=dictClsAvg
+      print("Iteration %d with Accuracy:%f"%(N,accuracy))
+    else:
+      print("Iteration %d complete.."%(N))
       maxModel=dictClsAvg
-    print("Iteration %d: Accuracy:%f"%(N,accuracy))
-  print(maxAcc)
+  if args.devFile:
+    print("Model with Accuracy:%f is stored as %s"%(maxAcc,mdfname))
+  else:
+    print("Model with last iteration written as %s"%(mdfname))
   dictModel=dict(wDict=maxModel,setcls=setcls)
   with open(mdfname,"wb") as handle:
     pickle.dump(dictModel,handle)
