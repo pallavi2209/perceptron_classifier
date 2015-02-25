@@ -90,7 +90,35 @@ F-Score overall: 0.64377
 
 
 ANSWER3:
-In case of POS tagging, Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 by perceptron. (DECREASED)
+In case of POS tagging:
+Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 by perceptron. (DECREASED)
+
+In case of NER tagging, here are the results:
+Location entity:
+Precison of LOC:0.48471
+Recall of LOC:0.67276
+F-Score of LOC:0.56346 (decreased)
+
+Organization entity:
+Precision of ORG:0.56346
+Recall of ORG: 0.56346
+F-Score of ORG: 0.54595 (decreased)
+
+Person entity:
+Precision of PER:0.75653
+Recall of PER: 0.44517
+F-Score of PER: 0.56051 (decreased)
+
+Miscellaneous entity:
+Precision of MISC:0.67512
+Recall of MISC: 0.09662
+F-score of MISC: 0.16906 (decreased)
+
+Overall metrics:
+Precision Overall:0.56757
+Recall Overall: 0.50425
+F-Score overall: 0.53404 (decreased)
+
 Reason:
 I think the decrease in accuracy is because Naive Bayes considers the features as bag of words. It assumes the words are independent and hence it does not consider the context of a word in regard to surrounding words. This strong assumption of independence makes Naive Bayes to lose the ability to integrate the interactions between features, hence giving less accuracy in data sets where feature interactions play a role for classification, example POS tagging.
 Perceptron handles this case very well, since it considers the surrounding features also and hence can include features interactions. This enabled perceptron to have better accuracy in case of POS tagging and NER tagging.
