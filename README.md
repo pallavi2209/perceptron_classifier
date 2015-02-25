@@ -36,6 +36,7 @@ Example: python3 netag.py ner.model < ner.esp.test > ner.esp.test.out
 
 ANSWER 1:
 Accuracy of your part-of-speech tagger: I did 20 iterations and got the results as follows for dev data:
+
 Iteration 0 with Accuracy:0.941720
 Iteration 1 with Accuracy:0.945185
 Iteration 2 with Accuracy:0.949872
@@ -58,18 +59,39 @@ Iteration 18 with Accuracy:0.955929
 Iteration 19 with Accuracy:0.950869
 Model with Accuracy:0.956951 is stored as pos.model
 
-Maximum accuracy: 0.956951
+Maximum accuracy achieved with data set: 0.956951
 
 
 ANSWER 2:
-Fscore for LOC: 0.5645
-Fscore for ORG: 0.4967
-FScore for PER: 0.5678
-FScore for MISC: 0.5234
-Overall FScore: 0.5564 
+Location entity:
+Precison of LOC:0.6035
+Recall of LOC:0.6229
+F-Score of LOC:0.6130
+
+Organization entity:
+Precision of ORG:0.7817
+Recall of ORG: 0.57823
+F-Score of ORG: 0.66475
+
+Person entity:
+Precision of PER:0.82961
+Recall of PER: 0.68903
+F-Score of PER: 0.75281
+
+Miscellaneous entity:
+Precision of MISC:0.39772
+Recall of MISC: 0.34606
+F-score of MISC: 0.37010
+
+Overall metrics:
+Precision Overall:0.70026
+Recall Overall: 0.59572
+F-Score overall: 0.64377 
+
 
 ANSWER3:
-In case of POS tagging, Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 in case of perceptron. (DECREASED)
+In case of POS tagging, Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 by perceptron. (DECREASED)
 Reason:
-I believe the the decrease in accuracy is because Naive Bayes considers the features as bag of words. It assumes the words are independent and hence it does not considers the context of a word in regard to surrounding words. Perceptron handles this case very well, since it taken in the features corresponding to surrounding words also. This enable perceptron to increase the accuracy in case of POS tagging and NER tagging.
+I think the decrease in accuracy is because Naive Bayes considers the features as bag of words. It assumes the words are independent and hence it does not consider the context of a word in regard to surrounding words. This strong assumption of independence makes Naive Bayes to lose the ability to integrate the interactions between features, hence giving less accuracy in data sets where feature interactions play a role for classification, example POS tagging.
+Perceptron handles this case very well, since it considers the surrounding features also and hence can include features interactions. This enabled perceptron to have better accuracy in case of POS tagging and NER tagging.
 
