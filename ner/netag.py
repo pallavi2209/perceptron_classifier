@@ -18,9 +18,11 @@ def processToken(token):
   word=token[:iSecLast]
   pbTag=token[iSecLast+1:]
   posTag=pbTag.split("/")[0]
+  #nerTag=pbTag.split("/")[1]
   return [word, posTag]
 
 def createneFile(inLine):
+ # print(inLine)
   listPre=[]
   tokens=inLine.split()
   prep=["BOS/BOS"]
@@ -81,6 +83,7 @@ def netagMain(argv):
   
   sys.stdin = codecs.getreader('utf8')(sys.stdin.detach(), errors='ignore')
   for doc in sys.stdin:
+#    print(doc)
     listToTag=createneFile(doc)
     result=""
     for line in listToTag:  

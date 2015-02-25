@@ -14,13 +14,11 @@ def perceptMain(argv):
   mdfname=args.modelFile
   if args.devFile:
     devfname=args.devFile
-
   setcls=set()
   dictuw={}
   trfile=open(trfname,'r')
-  lineList=[]
-  for line in trfile:
-    lineList.append(line)
+  lineList = trfile.readlines()
+  trfile.close()
   for line in lineList:
     tokens=line.split()
     strClass=tokens[0]
@@ -98,6 +96,8 @@ def perceptMain(argv):
   with open(mdfname,"wb") as handle:
     pickle.dump(dictModel,handle)
   trfile.close()
+  if args.devFile:
+    devFile.close()
   handle.close()
  
 if __name__=="__main__":

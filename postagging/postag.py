@@ -35,6 +35,8 @@ def createposFile(inLine):
     
     line += prevF + " "+ currF +" "+ nextF + " "  + suffixFthree + " " + suffixFtwo + " " +  wshape + "\n"
     listPre.append(line)
+    prev=curr
+    curr=nxt
   return listPre
 
 def postagMain(argv):
@@ -54,7 +56,7 @@ def postagMain(argv):
     result=""
     for line in listToTag:  
       tokens=line.split()
-      currW=tokens[2].split(":")[1]
+      currW=tokens[1].split(":")[1]
       maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsWts[cls][token] for token in tokens[0:] if token in dictClsWts[cls]]) )
       result += currW + "/" + maxwtcls + " "
     print(result)
