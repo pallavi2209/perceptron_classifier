@@ -1,7 +1,7 @@
 # README #
 The assignment consists of three parts:
 #### Average Perceptron Classifier:####
-The code contains two files: perceplearn.py and percepclassify.py
+The code contains two files: perceplearn.py and percepclassify.py:
 perceplearn.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 perceplearn.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
 Example: python3 perceplearn.py spam_train spam.model
@@ -12,7 +12,7 @@ python3 percepclassify.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 percepclassify.py spam.model < spam.test > spam.out
 
 #### Part of Speech Tagging ####
-The code contains two files: postrain.py and postag.py
+The code contains two files: postrain.py and postag.py:
 postrain.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 postrain.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
 Example: python3 postrain.py pos.train pos.model
@@ -23,7 +23,7 @@ python3 postag.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 postag.py pos.model < pos.test > pos.test.out
 
 #### Named Entity Recognition ####
-The code contains two files: nelearn.py, netag.py, calcNerFscore
+The code contains two files: nelearn.py, netag.py, calcNerFscore:
 nelearn.py.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 nelearn.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
 Example: python3 nelearn.py ner.esp.train ner.model
@@ -39,7 +39,7 @@ Example: python3 calcNerFscore.py ner.esp.dev ner.esp.dev.out
 
 
 ### ANSWER 1: ###
-Accuracy of your part-of-speech tagger: I did 20 iterations and got the results as follows for dev data:
+Accuracy of part-of-speech tagger: I did 20 iterations and got the results as follows for dev data:
 
 Iteration 0 with Accuracy:0.941720
 Iteration 1 with Accuracy:0.945185
