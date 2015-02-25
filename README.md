@@ -1,6 +1,6 @@
 # README #
 The assignment consists of three parts:
-1. Average Perceptron Classifier:
+#### Average Perceptron Classifier:####
 The code contains two files: perceplearn.py and percepclassify.py
 perceplearn.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 perceplearn.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
@@ -11,7 +11,7 @@ percepclassify.py takes in model file and test file (using STDIN) and gives outp
 python3 percepclassify.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 percepclassify.py spam.model < spam.test > spam.out
 
-2. Part of Speech Tagging
+#### Part of Speech Tagging ####
 The code contains two files: postrain.py and postag.py
 postrain.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 postrain.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
@@ -22,7 +22,7 @@ postag.py takes in model file and test file (using STDIN) and gives output tagge
 python3 postag.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 postag.py pos.model < pos.test > pos.test.out
 
-2. Named Entity Recognition
+#### Named Entity Recognition ####
 The code contains two files: nelearn.py and netag.py
 nelearn.py.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 nelearn.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
@@ -34,7 +34,7 @@ python3 netag.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 netag.py ner.model < ner.esp.test > ner.esp.test.out
 
 
-ANSWER 1:
+### ANSWER 1: ###
 Accuracy of your part-of-speech tagger: I did 20 iterations and got the results as follows for dev data:
 
 Iteration 0 with Accuracy:0.941720
@@ -62,7 +62,7 @@ Model with Accuracy:0.956951 is stored as pos.model
 Maximum accuracy achieved with data set: 0.956951
 
 
-ANSWER 2:
+### ANSWER 2: ###
 Location entity:
 Precison of LOC:0.6035
 Recall of LOC:0.6229
@@ -89,7 +89,7 @@ Recall Overall: 0.59572
 F-Score overall: 0.64377 
 
 
-ANSWER3:
+### ANSWER 3: ###
 In case of POS tagging:
 Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 by perceptron. (DECREASED)
 
