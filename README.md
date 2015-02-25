@@ -23,7 +23,7 @@ python3 postag.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 postag.py pos.model < pos.test > pos.test.out
 
 #### Named Entity Recognition ####
-The code contains two files: nelearn.py and netag.py
+The code contains two files: nelearn.py, netag.py, calcNerFscore
 nelearn.py.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
 python3 nelearn.py [TRAINING FILE] [MODEL FILE] [-h DEV FILE]
 Example: python3 nelearn.py ner.esp.train ner.model
@@ -32,6 +32,10 @@ Example: python3 nelearn.py ner.esp.train ner.model -h ner.esp.dev
 netag.py takes in model file and test file (using STDIN) and gives output tagged file.The syntax to run the code is:
 python3 netag.py [MODEL FILE] < [TEST FILE] > [OUTPUT FILE]
 Example: python3 netag.py ner.model < ner.esp.test > ner.esp.test.out
+
+calcNerFscore.py calculates the F score on ner output. The syntax is:
+python3 calcNerFscore.py [DEV FILE] [OUTPUT FILE]
+Example: python3 calcNerFscore.py ner.esp.dev ner.esp.dev.out
 
 
 ### ANSWER 1: ###
