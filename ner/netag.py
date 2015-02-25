@@ -92,7 +92,7 @@ def netagMain(argv):
       currT=tokens[3].split(":")[1]
       maxwtcls = max( setcls , key = lambda cls: sum( [ dictClsWts[cls][token] for token in tokens[0:] if token in dictClsWts[cls]]) )
       result += currW + "/" + currT + "/" + maxwtcls + " "
-    print(result)
+    print(result.strip())
     sys.stdout.flush()
 
 
