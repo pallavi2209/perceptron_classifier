@@ -1,5 +1,4 @@
 # README #
-The assignment consists of three parts:
 #### Average Perceptron Classifier:####
 The code contains two files: perceplearn.py and percepclassify.py:
 perceplearn.py takes in the training file and model file name (as output). There is an optional argument also, -h to give dev file as an input. The syntax to run the code is:
@@ -38,7 +37,6 @@ python3 calcNerFscore.py [DEV FILE] [OUTPUT FILE]
 Example: python3 calcNerFscore.py ner.esp.dev ner.esp.dev.out
 
 
-### ANSWER 1: ###
 Accuracy of part-of-speech tagger: I did 20 iterations and got the results as follows for dev data:
 
 Iteration 0 with Accuracy:0.941720
@@ -66,7 +64,6 @@ Model with Accuracy:0.956951 is stored as pos.model
 Maximum accuracy achieved with data set: 0.956951
 
 
-### ANSWER 2: ###
 Location entity:
 Precison of LOC:0.6035
 Recall of LOC:0.6229
@@ -93,7 +90,6 @@ Recall Overall: 0.59572
 F-Score overall: 0.64377 
 
 
-### ANSWER 3: ###
 In case of POS tagging:
 Naive Bayes Classifier gives an accuracy : 0.9373 as compared to the accuracy of 0.95695 by perceptron. (DECREASED)
 
